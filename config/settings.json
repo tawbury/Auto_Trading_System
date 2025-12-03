@@ -1,0 +1,8 @@
+{
+  "env": "dev",
+  "active_broker": "KIS",
+  "risk": {
+    "max_exposure": 0.9,
+    "max_position_pct": 0.2
+  }
+}

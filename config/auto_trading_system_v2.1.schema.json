@@ -1,0 +1,203 @@
+{
+  "version": "2.1",
+  "project": "auto_trading_system",
+  "sheets": {
+    "Config": {
+      "type": "key_value",
+      "row_start": 2,
+      "columns": [
+        { "col": "A", "name": "Category", "type": "string", "python_key": "category" },
+        { "col": "B", "name": "Key", "type": "string", "python_key": "key" },
+        { "col": "C", "name": "Value", "type": "string", "python_key": "value" },
+        { "col": "D", "name": "Description", "type": "string", "python_key": "description" }
+      ],
+      "blocks": {
+        "Strategy_Params": "A2:D11",
+        "ATR_Strategy": "A12:D15",
+        "Filters": "A16:D30",
+        "Risk_Params": "A60:D80",
+        "Portfolio_Params": "A90:D104",
+        "Global_Flags": "A109:D115"
+      }
+    },
+
+    "DI_DB": {
+      "type": "dividend_db",
+      "row_start": 2,
+      "columns": [
+        { "col": "A", "name": "Ticker", "type": "string", "python_key": "ticker" },
+        { "col": "B", "name": "Name", "type": "string", "python_key": "name" },
+        { "col": "C", "name": "Pay_Date", "type": "date", "python_key": "pay_date" },
+        { "col": "D", "name": "Base_Date", "type": "date", "python_key": "base_date" },
+        { "col": "E", "name": "Dividend_Per_Share", "type": "number", "python_key": "dps" },
+        { "col": "F", "name": "Qty", "type": "number", "python_key": "qty" },
+        { "col": "G", "name": "Total_Dividend", "type": "number", "python_key": "total_dividend" },
+        { "col": "H", "name": "Pay_Month", "type": "number", "python_key": "pay_month" },
+        { "col": "I", "name": "Pay_Year", "type": "number", "python_key": "pay_year" },
+        { "col": "J", "name": "Note", "type": "string", "python_key": "note" }
+      ],
+      "primary_key": ["Ticker", "Pay_Date"]
+    },
+
+    "DT_Report": {
+      "type": "trade_ledger",
+      "row_start": 2,
+      "columns": [
+        { "col": "A", "name": "No", "type": "int", "python_key": "no" },
+        { "col": "B", "name": "Date", "type": "date", "python_key": "date" },
+        { "col": "C", "name": "Time", "type": "string", "python_key": "time" },
+        { "col": "D", "name": "Symbol", "type": "string", "python_key": "symbol" },
+        { "col": "E", "name": "Name", "type": "string", "python_key": "name" },
+        { "col": "F", "name": "Market", "type": "string", "python_key": "market" },
+        { "col": "G", "name": "Side", "type": "string", "python_key": "side" },
+        { "col": "H", "name": "Qty", "type": "number", "python_key": "qty" },
+        { "col": "I", "name": "Price", "type": "number", "python_key": "price" },
+        { "col": "J", "name": "Amount_Local", "type": "number", "python_key": "amount_local" },
+        { "col": "K", "name": "Currency", "type": "string", "python_key": "currency" },
+        { "col": "L", "name": "FX_Rate", "type": "number", "python_key": "fx_rate" },
+        { "col": "M", "name": "Amount_KRW", "type": "number", "python_key": "amount_krw" },
+        { "col": "N", "name": "Fee_Tax", "type": "number", "python_key": "fee_tax" },
+        { "col": "O", "name": "Net_Amount_KRW", "type": "number", "python_key": "net_amount_krw" },
+        { "col": "P", "name": "Strategy", "type": "string", "python_key": "strategy" },
+        { "col": "Q", "name": "Position_Size", "type": "number", "python_key": "position_size" },
+        { "col": "R", "name": "Hold_Days", "type": "number", "python_key": "hold_days" },
+        { "col": "S", "name": "PnL", "type": "number", "python_key": "pnl" },
+        { "col": "T", "name": "PnL_Pct", "type": "number", "python_key": "pnl_pct" },
+        { "col": "U", "name": "Tag", "type": "string", "python_key": "tag" },
+        { "col": "V", "name": "Note", "type": "string", "python_key": "note" }
+      ],
+      "primary_key": ["No"],
+      "relations": {
+        "Position": ["Symbol", "Market"],
+        "History": ["Date"]
+      }
+    },
+
+    "History": {
+      "type": "equity_history",
+      "row_start": 2,
+      "columns": [
+        { "col": "A", "name": "Date", "type": "date", "python_key": "date" },
+        { "col": "B", "name": "Total_Equity", "type": "number", "python_key": "total_equity" },
+        { "col": "C", "name": "Daily_PnL", "type": "number", "python_key": "daily_pnl" },
+        { "col": "D", "name": "Daily_Return", "type": "number", "python_key": "daily_return" },
+        { "col": "E", "name": "Cumulative_Return", "type": "number", "python_key": "cumulative_return" },
+        { "col": "F", "name": "Volatility_20D", "type": "number", "python_key": "vol_20d" },
+        { "col": "G", "name": "High_Watermark", "type": "number", "python_key": "high_watermark" },
+        { "col": "H", "name": "Drawdown", "type": "number", "python_key": "drawdown" },
+        { "col": "I", "name": "MDD", "type": "number", "python_key": "mdd" },
+        { "col": "J", "name": "Note", "type": "string", "python_key": "note" }
+      ],
+      "primary_key": ["Date"]
+    },
+
+    "Strategy_Performance": {
+  "type": "strategy_perf",
+    "row_start": 2,
+    "columns": [
+      { "col": "A", "name": "Strategy", "type": "string", "python_key": "strategy" },
+      { "col": "B", "name": "Trade_Count", "type": "number", "python_key": "trade_count" },
+      { "col": "C", "name": "Win_Rate", "type": "number", "python_key": "win_rate" },
+      { "col": "D", "name": "Avg_PnL", "type": "number", "python_key": "avg_pnl" },
+      { "col": "E", "name": "Total_PnL", "type": "number", "python_key": "total_pnl" },
+      { "col": "F", "name": "Cumulative_Return", "type": "number", "python_key": "cumulative_return" },
+      { "col": "G", "name": "MDD", "type": "number", "python_key": "mdd" },
+      { "col": "H", "name": "Volatility", "type": "number", "python_key": "volatility" },
+      { "col": "I", "name": "Avg_Holding_Days", "type": "number", "python_key": "avg_hold_days" },
+      { "col": "J", "name": "Sharpe", "type": "number", "python_key": "sharpe" },
+      { "col": "K", "name": "Risk_Score", "type": "number", "python_key": "risk_score" },
+      { "col": "L", "name": "Net_Score", "type": "number", "python_key": "net_score" },
+      { "col": "M", "name": "Note", "type": "string", "python_key": "note" }
+    ],
+    "primary_key": ["Strategy"]
+    },
+
+
+    "Position": {
+      "type": "holdings",
+      "row_start": 43,
+      "columns": [
+        { "col": "A", "name": "Symbol", "type": "string", "python_key": "symbol" },
+        { "col": "B", "name": "Name", "type": "string", "python_key": "name" },
+        { "col": "C", "name": "Market", "type": "string", "python_key": "market" },
+        { "col": "D", "name": "Qty", "type": "number", "python_key": "qty" },
+        { "col": "E", "name": "Avg_Price_CCY", "type": "number", "python_key": "avg_price_ccy" },
+        { "col": "F", "name": "Current_Price_CCY", "type": "number", "python_key": "current_price_ccy" },
+        { "col": "G", "name": "Avg_Price_KRW", "type": "number", "python_key": "avg_price_krw" },
+        { "col": "H", "name": "Current_Price_KRW", "type": "number", "python_key": "current_price_krw" },
+        { "col": "I", "name": "Market_Value_KRW", "type": "number", "python_key": "market_value_krw" },
+        { "col": "J", "name": "Unrealized_PnL_KRW", "type": "number", "python_key": "unrealized_pnl_krw" },
+        { "col": "K", "name": "Unrealized_PnL_Pct", "type": "number", "python_key": "unrealized_pnl_pct" },
+        { "col": "L", "name": "Strategy", "type": "string", "python_key": "strategy" },
+        { "col": "M", "name": "ATR", "type": "number", "python_key": "atr" },
+        { "col": "N", "name": "ATR_Pct", "type": "number", "python_key": "atr_pct" },
+        { "col": "O", "name": "ATR_Stop", "type": "number", "python_key": "atr_stop" },
+        { "col": "P", "name": "ATR_Target", "type": "number", "python_key": "atr_target" },
+        { "col": "Q", "name": "Tag", "type": "string", "python_key": "tag" },
+        { "col": "R", "name": "Sector", "type": "string", "python_key": "sector" },
+        { "col": "S", "name": "Note", "type": "string", "python_key": "note" }
+      ],
+      "primary_key": ["Symbol"],
+      "blocks": {
+        "Summary": {
+          "initial_equity_investment": "B3",
+          "total_equity": "B4",
+          "cash_balance": "B5",
+          "stock_equity": "B6",
+          "fx_equity": "B7",
+          "exposure_ratio": "B8",
+          "cash_ratio": "B9",
+          "holdings_count": "B10",
+          "last_update": "B11"
+        },
+        "Constraints": {
+          "max_position_count_current": "C15",
+          "max_position_count_limit": "D15",
+          "max_position_pct_current": "C16",
+          "max_position_pct_limit": "D16",
+          "max_total_exposure_current": "C17",
+          "max_total_exposure_limit": "D17",
+          "cash_reserve_min_current": "C18",
+          "cash_reserve_min_limit": "D18",
+          "atr_max_pct_current": "C19",
+          "atr_max_pct_limit": "D19",
+          "atr_min_pct_current": "C20",
+          "atr_min_pct_limit": "D20",
+          "fx_limit_usd_current": "C21",
+          "fx_limit_usd_limit": "D21",
+          "fx_limit_jpy_current": "C22",
+          "fx_limit_jpy_limit": "D22",
+          "fx_limit_krw_usd_current": "C23",
+          "fx_limit_krw_usd_limit": "D23",
+          "fx_limit_krw_jpy_current": "C24",
+          "fx_limit_krw_jpy_limit": "D24"
+        },
+        "HiddenCalculations": {
+          "total_stock_value": "B28",
+          "total_fx_value": "B29",
+          "total_value": "B30",
+          "total_exposure_pct": "B31",
+          "cash_pct": "B32"
+        },
+        "FXBalances": {
+          "krw_qty": "B36",
+          "krw_avg_rate": "C36",
+          "krw_current_rate": "D36",
+          "krw_value_krw": "E36",
+          "usd_qty": "B37",
+          "usd_avg_rate": "C37",
+          "usd_current_rate": "D37",
+          "usd_value_krw": "E37",
+          "jpy_qty": "B38",
+          "jpy_avg_rate": "C38",
+          "jpy_current_rate": "D38",
+          "jpy_value_krw": "E38",
+          "hkd_qty": "B39",
+          "hkd_avg_rate": "C39",
+          "hkd_current_rate": "D39",
+          "hkd_value_krw": "E39"
+        }
+      }
+    }
+  }
+}
