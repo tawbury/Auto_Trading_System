@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/
+
+# VSCode / PyCharm
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Credentials & Secrets
+.env
+credentials.json
+
+# Logs
+*.log
