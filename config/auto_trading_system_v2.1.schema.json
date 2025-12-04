@@ -20,7 +20,15 @@
         "Global_Flags": "A109:D115"
       }
     },
-
+      "fields": [
+        {
+          "field": "KIS_MODE",
+          "key": "KIS_MODE",
+          "value_cell": "C92",
+          "description_cell": "D92",
+          "description": "Korea Investment Broker Mode (VTS or REAL)"
+        }
+      ]
     "DI_DB": {
       "type": "dividend_db",
       "row_start": 2,
