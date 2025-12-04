@@ -1,115 +1,151 @@
 # src/core/app_context.py
+
 import os
 from pathlib import Path
 
 from core.config_loader import load_settings
 from brokers.kis_broker import KISBroker
-from sheets.google_client import GoogleSheetsClient
-from sheets.schema_loader import SchemaRegistry
 
-from sheets.dt_report_repo import DTReportRepository
-from sheets.position_repo import PositionRepository
-from sheets.history_repo import HistoryRepository
+from sheets.google_client import GoogleSheetsClient
+from sheets.schema_registry import SchemaRegistry
+from sheets.dt_report_repository import DTReportRepository
+from sheets.position_repository import PositionRepository
+from sheets.history_repository import HistoryRepository
 
 from engine.portfolio_engine import PortfolioEngine
+
+# TradingEngine 관련
+from engine.trading.order_validator import OrderValidator
+from engine.trading.position_sizer import PositionSizer
+from engine.trading.order_executor import OrderExecutor
+from engine.trading.trading_engine import TradingEngine
+
+# 가격 조회 서비스 (broker → price_service)
+from brokers.price_service import PriceService
 
 
 class AppContext:
     """
-    시스템의 모든 주요 구성 요소를 초기화하고 보관하는 핵심 컨텍스트 클래스.
+    시스템 전체 구성요소를 초기화하는 핵심 컨텍스트.
     - Google Sheets 연결
     - Schema 로드
-    - Config Sheet 값 로드 (KIS_MODE 포함)
-    - Broker(KIS), Repository, PortfolioEngine 초기화
+    - Repository 생성
+    - Broker 생성(KIS)
+    - PortfolioEngine 생성
+    - TradingEngine 생성(신규)
     """
 
     def __init__(self, root_dir: Path):
-        # ============================================================
+
+        # ------------------------------------------------------------
         # 1. 기본 경로 설정
-        # ============================================================
+        # ------------------------------------------------------------
         self.root_dir = root_dir
         self.config_dir = root_dir / "config"
 
-        # ============================================================
-        # 2. settings.json 및 기타 설정파일 로드
-        # ============================================================
+        # ------------------------------------------------------------
+        # 2. settings.json 로드
+        # ------------------------------------------------------------
         self.settings = load_settings(self.config_dir)
 
-        # ============================================================
+        # ------------------------------------------------------------
         # 3. Google Sheets 연결
-        # ============================================================
+        # ------------------------------------------------------------
         sheet_key = os.getenv("GOOGLE_SHEET_KEY")
         cred_file = os.getenv("GOOGLE_CREDENTIALS_FILE")
 
         self.gs = GoogleSheetsClient(sheet_key, cred_file)
         self.gs.connect()
 
-        # ============================================================
-        # 4. JSON 스키마 로드 (시트 구조 정의)
-        # ============================================================
+        # ------------------------------------------------------------
+        # 4. 스키마 로드
+        # ------------------------------------------------------------
         schema_path = self.config_dir / "auto_trading_system_v2.1.schema.json"
         self.schema = SchemaRegistry(schema_path)
 
-        # ============================================================
-        # 5. Google Sheets → KIS_MODE 우선 적용
-        #    SYSTEM_CONFIG 시트 C92에 위치한 값이 최우선 모드
-        # ============================================================
-        kis_mode_from_sheet = None
+        # ------------------------------------------------------------
+        # 5. KIS_MODE 설정 (시트 값 > .env)
+        # ------------------------------------------------------------
         try:
-            kis_mode_from_sheet = self.gs.read_range("Config", "C92")[0][0]
-            if kis_mode_from_sheet:
-                kis_mode_from_sheet = str(kis_mode_from_sheet).strip().upper()
+            kis_mode_from_sheet = self.gs.read_range("Config", "C92")[0][0].strip().upper()
         except Exception:
-            pass
+            kis_mode_from_sheet = None
 
-        # ① 시트에서 읽힌 모드가 유효하면 우선 적용
         if kis_mode_from_sheet in ("VTS", "REAL"):
             self.kis_mode = kis_mode_from_sheet
         else:
-            # ② 그렇지 않으면 .env의 KIS_MODE 사용
             self.kis_mode = os.getenv("KIS_MODE", "VTS").upper()
 
         print(f"[AppContext] KIS_MODE = {self.kis_mode}")
 
-        # ============================================================
-        # 6. KIS Broker 초기화
-        #    (모드 정보를 넘겨주어 실전/모의 계좌/키 자동 스위칭)
-        # ============================================================
+        # ------------------------------------------------------------
+        # 6. Broker 초기화
+        # ------------------------------------------------------------
         self.broker = KISBroker(mode=self.kis_mode)
 
-        # ============================================================
-        # 7. Repository 초기화 (DT_Report / Position / History)
-        # ============================================================
-        self.dt_report = DTReportRepository(self.schema, self.gs)
+        # PriceService 생성 (broker 기반)
+        self.price_service = PriceService(self.broker)
+
+        # ------------------------------------------------------------
+        # 7. Repository 초기화
+        # ------------------------------------------------------------
+        self.dt_repo = DTReportRepository(self.schema, self.gs)
         self.position_repo = PositionRepository(self.schema, self.gs)
         self.history_repo = HistoryRepository(self.schema, self.gs)
 
-        # ============================================================
-        # 8. Position Sheet → initial_cash 읽기
-        #    스키마의 "Position" 블록 Summary 정보를 기반으로 셀주소 자동 탐색
-        # ============================================================
+        # ------------------------------------------------------------
+        # 8. Position 시트에서 초기자본 읽기
+        # ------------------------------------------------------------
         pos_schema = self.schema.get("Position")
-
-        # Summary 블록에서 initial_equity_investment 셀 주소 확보
         initial_cash_cell = pos_schema.blocks["Summary"]["initial_equity_investment"]
 
-        # Google Sheet로부터 실제 값 읽기
-        raw_value = self.gs.read_range("Position", initial_cash_cell)[0][0]
-
         try:
-            # 세 자리 콤마 제거 후 float 변환
+            raw_value = self.gs.read_range("Position", initial_cash_cell)[0][0]
             initial_cash = float(str(raw_value).replace(",", "").strip())
         except Exception:
             initial_cash = 0.0
 
-        print(f"[AppContext] Initial Cash Loaded: {initial_cash}")
+        print(f"[AppContext] Initial_Cash Loaded = {initial_cash}")
 
-        # ============================================================
+        # ------------------------------------------------------------
         # 9. PortfolioEngine 초기화
-        # ============================================================
+        # ------------------------------------------------------------
         self.portfolio = PortfolioEngine(
             broker=self.broker,
             position_repo=self.position_repo,
-            dt_repo=self.dt_report,
-            initial_cash=initial_cash
+            dt_repo=self.dt_repo,
+            initial_cash=initial_cash,
         )
+
+        # ============================================================
+        # ★ 10. TradingEngine 구성 요소 생성 (신규 추가)
+        # ============================================================
+
+        # A) OrderValidator
+        self.order_validator = OrderValidator(
+            risk_engine=None,  # RiskEngine 연결 시 여기에 주입
+            pos_repo=self.position_repo,
+            config=self.settings.get("validator", {})
+        )
+
+        # B) PositionSizer
+        self.position_sizer = PositionSizer(
+            price_service=self.price_service,
+            history_repo=self.history_repo,
+            config=self.settings.get("sizer", {})
+        )
+
+        # C) OrderExecutor
+        self.order_executor = OrderExecutor(broker=self.broker)
+
+        # D) TradingEngine 생성
+        self.trading_engine = TradingEngine(
+            dt_repo=self.dt_repo,
+            pos_repo=self.position_repo,
+            hist_repo=self.history_repo,
+            validator=self.order_validator,
+            sizer=self.position_sizer,
+            executor=self.order_executor
+        )
+
+        print("[AppContext] TradingEngine 초기화 완료")
