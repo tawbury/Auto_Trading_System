@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from .base_repository import BaseSheetRepository
 from .schema_registry import SchemaRegistry
 from .google_client import GoogleSheetsClient
-from src.engine.trading.models import OrderResult  # 예시 경로
+from engine.trading.models import OrderResult  # 예시 경로
 
 
 class PositionRepository(BaseSheetRepository):

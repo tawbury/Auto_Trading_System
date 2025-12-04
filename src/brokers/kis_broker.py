@@ -10,7 +10,7 @@ import requests
 import pathlib
 from dotenv import load_dotenv
 
-from src.brokers.broker_interface import BrokerInterface  # 경로 고정
+from brokers.broker_interface import BrokerInterface  # 경로 고정
 
 # ===============================================================
 # 1) 프로젝트 루트에서 .env 강제 로드

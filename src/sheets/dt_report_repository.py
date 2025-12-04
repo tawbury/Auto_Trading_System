@@ -8,7 +8,7 @@ from .schema_registry import SchemaRegistry
 from .google_client import GoogleSheetsClient
 
 # Trading Engine 쪽에서 정의할 예정
-from src.engine.trading.models import OrderResult  # 예시 경로
+from engine.trading.models import OrderResult  # 예시 경로
 
 
 class DTReportRepository(BaseSheetRepository):
