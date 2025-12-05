@@ -1,5 +1,5 @@
 # ============================================================
-# Python cache
+# Python Cache & Bytecode
 # ============================================================
 __pycache__/
 *.pyc
@@ -7,17 +7,18 @@ __pycache__/
 *.pyd
 
 # ============================================================
-# Virtual Environment
+# Virtual Environments
 # ============================================================
 .venv/
 env/
 venv/
 
 # ============================================================
-# IDE 설정 파일 (VSCode, PyCharm)
+# IDE / Editor Settings
 # ============================================================
 .idea/
 .vscode/
+*.iml
 
 # ============================================================
 # OS System Files
@@ -29,43 +30,77 @@ Thumbs.db
 # Credentials & Secrets (절대 커밋 금지)
 # ============================================================
 .env
+*.env
+secrets.*
+secret.*
 credentials.json
+config/service_account.json
+
+# Google / OAuth Token Caches
+token.json
+.google-token/
+google_token.json
 
 # ============================================================
 # Logs
 # ============================================================
 *.log
 logs/
+log/
 
 # ============================================================
-# Cache directory (tokens, temp data)
+# Cache / Temp Data
 # ============================================================
 cache/
+tmp/
+temp/
 
 # ============================================================
-# Jupyter Notebook Garbage
+# Jupyter Notebook Cache
 # ============================================================
 .ipynb_checkpoints/
 notebooks/*checkpoint.ipynb
 
 # ============================================================
-# Build / Distribution files (미래 대비)
+# Build / Distribution
 # ============================================================
 build/
 dist/
 *.egg-info/
+*.spec
 
 # ============================================================
-# pycache 무시 설정(.gitignore 수정)
+# Node / Frontend (만약 향후 Dashboard 확장 대비)
 # ============================================================
-__pycache__/
-*.pyc
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # ============================================================
-# 컨피그 .json
+# Project-Specific Ignore Rules
 # ============================================================
-config/service_account.json
-config/*.json
+
+# 1) 모든 JSON 차단 → BUT schemas 폴더만 예외 허용
 *.json
+!schemas/*.json
+!schemas/history/*.json
 
+# 2) 테스트용 연결 파일 무시
+src/sheets/test_connection.py
 
+# 3) Reports 자동 생성 파일
+reports/**/*.md
+
+# 4) 자동 생성된 schema diff / impact 보고서
+reports/schema/*.md
+
+# 5) Repository 자동 생성 파일 허용 (필요 시 무시 X)
+# → src/repositories/*.py 는 추적해야 하므로 ignore 금지
+
+# 6) PyCharm workspace
+*.idea/
+
+# ============================================================
+# END OF FILE
+# ============================================================
