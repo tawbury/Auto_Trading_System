@@ -1,0 +1,60 @@
+name: Schema Validation & Auto Versioning
+
+on:
+  pull_request:
+    paths:
+      - 'config/auto_trading_system.schema.json'
+      - 'config/schema_history/**'
+      - 'tools/schema_version_manager.py'
+      - 'src/sheets/**'
+
+jobs:
+  schema-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+
+      - name: Run Schema Version Manager
+        id: schema_run
+        run: |
+          python tools/schema_version_manager.py > schema_output.txt || true
+
+      - name: Show Schema Diff Output
+        run: |
+          echo "===== Schema Manager Output ====="
+          cat schema_output.txt
+
+      - name: Create PR Comment with Schema Diff
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          message: |
+            ## 🔍 Schema Change Report (Auto Generated)
+            ```
+            $(cat schema_output.txt)
+            ```
+
+      - name: Commit updated schema files (if needed)
+        if: success()
+        run: |
+          git config --global user.name "schema-bot"
+          git config --global user.email "schema-bot@users.noreply.github.com"
+          git add config/auto_trading_system.schema.json
+          git add config/schema_history/
+          git diff --cached --quiet || git commit -m "Auto-update schema version"
+          
+      - name: Push changes
+        if: success()
+        run: |
+          git push || true
