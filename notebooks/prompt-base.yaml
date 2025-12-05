@@ -213,7 +213,7 @@ auto_load_files:
       required: true
 
     - name: "Master JSON Schema"
-      filename: "auto_trading_system_v2.1.schemas.json"
+      filename: "auto_trading_system_v2.1.schema.json"
       required: true
 
     - name: "Architecture Full Document"
@@ -342,7 +342,7 @@ keyword_triggers:
 # ============================================================
 references:
   - "Project Definition.md"
-  - "auto_trading_system_v2.1.schemas.json"
+  - "auto_trading_system_v2.1.schema.json"
   - "architecture_full.md"
   - "Project_Operation_Guidelines.md"
   - "Schema_Engine_Integration.md"

@@ -3,7 +3,7 @@ name: Schema Validation & Auto Versioning
 on:
   pull_request:
     paths:
-      - 'config/auto_trading_system.schema.json'
+      - '../../schemas/auto_trading_system.schema.json'
       - 'config/schema_history/**'
       - 'tools/schema_version_manager.py'
       - 'src/sheets/**'

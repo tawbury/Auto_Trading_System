@@ -42,7 +42,7 @@ class DTReportRepository(BaseSheetRepository):
         """
         OrderResult를 DT_Report 시트 한 행으로 기록.
         계산 컬럼(PnL, PnL_Pct 등)은 시트 수식에 맡기고, 입력 필드만 채운다.
-        auto_trading_system.schemas.json의 컬럼 키를 기준으로 매핑. :contentReference[oaicite:5]{index=5}
+        auto_trading_system.schema.json의 컬럼 키를 기준으로 매핑. :contentReference[oaicite:5]{index=5}
         """
         record: Dict[str, Any] = {
             "no": self.get_next_no(),

@@ -1,8 +1,8 @@
 import os
 import shutil
 
-OLD_NAME = "auto_trading_system.schemas.json"
-NEW_NAME = "auto_trading_system.schemas.json"
+OLD_NAME = "auto_trading_system.schema.json"
+NEW_NAME = "auto_trading_system.schema.json"
 
 SEARCH_DIRS = ["src", "config", "tools", "tests"]  # 원하는 폴더 확장 가능
 BACKUP_SUFFIX = ".bak_schema_rename"
@@ -12,7 +12,7 @@ def rename_schema_file(project_root):
     new_path = os.path.join(project_root, "config", NEW_NAME)
 
     if os.path.exists(old_path):
-        print(f"[RENAME] Renaming schemas file:\n  {old_path} → {new_path}")
+        print(f"[RENAME] Renaming schema file:\n  {old_path} → {new_path}")
         os.rename(old_path, new_path)
     else:
         print(f"[SKIP] Schema file not found: {old_path}")
