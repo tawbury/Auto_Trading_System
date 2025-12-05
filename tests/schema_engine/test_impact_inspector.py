@@ -1,8 +1,8 @@
 # tests/schema_engine/test_impact_inspector.py
 
 from pathlib import Path
-from tools.schema.schema_impact_inspector import SchemaImpactInspector
-from tools.schema.diff_engine_v2 import SchemaDiffResult, SchemaChange, ChangeType, ChangeLevel
+from tools.schema.schema_impact import SchemaImpactInspector
+from tools.schema.schema_diff import SchemaDiffResult, SchemaChange, ChangeType, ChangeLevel
 
 def test_impact_inspector_position(tmp_path):
     inspector = SchemaImpactInspector(project_root=tmp_path)

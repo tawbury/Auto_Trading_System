@@ -1,37 +1,16 @@
 [
   {
-    "name": "Config",
-    "header_row": 1,
-    "data_start_row_hint": 2,
-    "max_columns": 10,
-    "sample_row_count": 30
-  },
-  {
-    "name": "DT_Report",
-    "header_row": 1,
-    "data_start_row_hint": 2,
-    "max_columns": 30,
-    "sample_row_count": 50
-  },
-  {
-    "name": "History",
-    "header_row": 1,
-    "data_start_row_hint": 2,
-    "max_columns": 15,
-    "sample_row_count": 50
-  },
-  {
-    "name": "Strategy_Performance",
-    "header_row": 1,
-    "data_start_row_hint": 2,
-    "max_columns": 30,
-    "sample_row_count": 40
-  },
-  {
     "name": "Position",
-    "header_row": 42,
-    "data_start_row_hint": 43,
+    "header_row": 1,
+    "data_start_row_hint": 2,
     "max_columns": 30,
-    "sample_row_count": 80
+    "sample_row_count": 200
+  },
+  {
+    "name": "T_Ledger",
+    "header_row": 1,
+    "data_start_row_hint": 2,
+    "max_columns": 30,
+    "sample_row_count": 300
   }
 ]

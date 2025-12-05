@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from tools.schema.schema_version_manager import SchemaVersionManager
-from tools.schema.diff_engine_v2 import SchemaDiffResult, SchemaChange, ChangeType, ChangeLevel
+from tools.schema.schema_diff import SchemaDiffResult, SchemaChange, ChangeType, ChangeLevel
 
 def test_version_bump(tmp_path):
     manager = SchemaVersionManager(project_root=tmp_path)

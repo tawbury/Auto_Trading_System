@@ -213,7 +213,7 @@ auto_load_files:
       required: true
 
     - name: "Master JSON Schema"
-      filename: "auto_trading_system_v2.1.schema.json"
+      filename: "auto_trading_system.schema.json"
       required: true
 
     - name: "Architecture Full Document"

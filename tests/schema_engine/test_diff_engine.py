@@ -1,6 +1,6 @@
 # tests/schema_engine/test_diff_engine.py
 
-from tools.schema.diff_engine_v2 import SchemaDiffEngine, ChangeLevel
+from tools.schema.schema_diff import SchemaDiffEngine, ChangeLevel
 
 def test_diff_engine_column_added():
     old = {
