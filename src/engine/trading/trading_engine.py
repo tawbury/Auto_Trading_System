@@ -3,12 +3,14 @@
 from __future__ import annotations
 from typing import Optional
 
-from .models import TradeSignal, OrderRequest, OrderResult
-from .event_queue import EventQueue
-from .order_validator import OrderValidator
-from .position_sizer import PositionSizer
-from .order_executor import OrderExecutor
+# 내부 모듈 (절대 패키지 import)
+from engine.trading.models import TradeSignal, OrderRequest, OrderResult
+from engine.trading.event_queue import EventQueue
+from engine.trading.order_validator import OrderValidator
+from engine.trading.position_sizer import PositionSizer
+from engine.trading.order_executor import OrderExecutor
 
+# 레포지토리 모듈
 from sheets.dt_report_repository import DTReportRepository
 from sheets.position_repository import PositionRepository
 from sheets.history_repository import HistoryRepository
@@ -49,7 +51,7 @@ class TradingEngine:
         self.queue.push(signal)
 
     # ============================================================
-    # 2) 시그널 하나 처리
+    # 2) 큐에서 한 개 처리
     # ============================================================
     def process_once(self) -> None:
         signal = self.queue.pop()
@@ -58,39 +60,48 @@ class TradingEngine:
         self._handle_signal(signal)
 
     # ============================================================
-    # 3) 큐가 빌 때까지 모두 처리
+    # 3) 큐가 빌 때까지 반복 실행
     # ============================================================
     def process_all(self) -> None:
-        while not self.queue.empty():
+        while not self.queue.is_empty():
             self.process_once()
 
     # ============================================================
-    # 4) 내부 처리 로직
+    # 4) 내부 처리 로직 (TradeSignal → OrderRequest → 주문 → 기록)
     # ============================================================
     def _handle_signal(self, signal: TradeSignal) -> None:
 
-        # 1) 시그널 단위 검증 (RiskEngine 등 포함)
+        # 1) 시그널 단위 검증
         if not self.validator.validate_signal(signal):
+            print("[TradingEngine] 시그널 검증 실패 → 처리 중단")
             return
 
-        # 2) 포지션 사이즈 산출
+        # 2) 주문 요청 생성 (포지션 사이즈 계산)
         order_req: OrderRequest = self.sizer.from_signal(signal)
 
         # 3) 주문 레벨 검증
         if not self.validator.validate_order(order_req):
+            print("[TradingEngine] 주문 검증 실패 → 처리 중단")
             return
 
-        # 4) 브로커로 주문 실행
+        # 4) 브로커 주문 실행
         order_result: OrderResult = self.executor.execute(order_req)
 
         # 5) DT_Report 기록
         self.dt_repo.write_trade(order_result)
 
-        # 6) Position 업데이트 (TODO: 상세 구현)
-        self.pos_repo.update_with_result(order_result)
+        # 6) Position 업데이트
+        try:
+            self.pos_repo.update_with_result(order_result)
+        except Exception as e:
+            print(f"[TradingEngine] Position 업데이트 오류: {e}")
 
-        # 7) History 업데이트 (TODO: 상세 구현)
-        self.hist_repo.update_after_trade(order_result)
+        # 7) History 업데이트
+        try:
+            self.hist_repo.update_after_trade(order_result)
+        except Exception as e:
+            print(f"[TradingEngine] History 업데이트 오류: {e}")
 
-        # (선택) 리스크엔진에 반영 (추후 연결)
-        # self.risk_engine.update(order_result)
+        # 향후 RiskEngine 업데이트 포인트
+        # if self.risk_engine:
+        #     self.risk_engine.update(order_result)

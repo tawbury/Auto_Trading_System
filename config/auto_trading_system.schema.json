@@ -1,0 +1,195 @@
+{
+  "schema_version": "3.6",
+  "sheets": {
+
+    "Config": {
+      "sheet_name": "Config",
+      "row_start": 2,
+      "columns": {
+        "category": "A",
+        "subcategory": "B",
+        "key": "C",
+        "value": "D",
+        "description": "E"
+      }
+    },
+
+    "T_Ledger": {
+      "sheet_name": "T_Ledger",
+      "row_start": 2,
+      "columns": {
+        "timestamp": "A",
+        "symbol": "B",
+        "market": "C",
+        "side": "D",
+        "qty": "E",
+        "price": "F",
+        "amount_local": "G",
+        "currency": "H",
+        "fx_rate": "I",
+        "amount_krw": "J",
+        "fee_tax": "K",
+        "net_amount_krw": "L",
+        "order_id": "M",
+        "strategy": "N",
+        "position_after": "O",
+        "hold_days": "P",
+        "pnl": "Q",
+        "pnl_pct": "R",
+        "tag": "S",
+        "broker": "T",
+        "note": "U"
+      }
+    },
+
+    "Position": {
+      "sheet_name": "Position",
+      "row_start": 2,
+      "columns": {
+        "symbol": "A",
+        "name": "B",
+        "market": "C",
+        "qty": "D",
+        "avg_price": "E",
+        "current_price": "F",
+        "avg_price_krw": "G",
+        "current_price_krw": "H",
+        "market_value_krw": "I",
+        "unrealized_pnl_krw": "J",
+        "unrealized_pnl_pct": "K",
+        "strategy": "L",
+        "atr": "M",
+        "atr_pct": "N",
+        "last_atr_pct": "O",
+        "atr_stop": "P",
+        "atr_target": "Q",
+        "sector": "R",
+        "tag": "S",
+        "note": "T"
+      }
+    },
+
+    "History": {
+      "sheet_name": "History",
+      "row_start": 2,
+      "columns": {
+        "date": "A",
+        "total_equity": "B",
+        "daily_pnl": "C",
+        "daily_return": "D",
+        "cumulative_return": "E",
+        "volatility_20d": "F",
+        "high_watermark": "G",
+        "drawdown": "H",
+        "mdd": "I",
+        "note": "J"
+      }
+    },
+
+    "Strategy_Performance": {
+      "sheet_name": "Strategy_Performance",
+      "row_start": 2,
+      "columns": {
+        "strategy": "A",
+        "trades": "B",
+        "win_rate": "C",
+        "avg_pnl": "D",
+        "total_pnl": "E",
+        "cumulative_return": "F",
+        "mdd": "G",
+        "volatility": "H",
+        "avg_holding_days": "I",
+        "sharpe_score": "J",
+        "risk_score": "K",
+        "net_score": "L",
+        "note": "M"
+      }
+    },
+
+    "R_Dash": {
+      "sheet_name": "R_Dash",
+      "blocks": {
+
+        "global_risk_panel": {
+          "title_cell": "A1",
+          "merge_title": "A1:E1",
+          "body_range": "A2:E3",
+          "fields": {
+            "killswitch_state": "A3",
+            "exposure_level": "B3",
+            "daily_loss_cap": "C3",
+            "portfolio_mdd": "D3",
+            "final_risk_level": "E3"
+          }
+        },
+
+        "risk_flags_panel": {
+          "title_cell": "A13",
+          "merge_title": "A13:F13",
+          "body_range": "A14:F15",
+          "fields": {
+            "exposure_flag": "A15",
+            "volatility_flag": "B15",
+            "pnl_flag": "C15",
+            "concentration_flag": "D15",
+            "strategy_flag": "E15",
+            "market_flag": "F15"
+          }
+        },
+
+        "daily_risk_status": {
+          "title_cell": "A5",
+          "merge_title": "A5:F5",
+          "body_range": "A6:F7",
+          "fields": {
+            "daily_pnl": "A7",
+            "unrealized_pnl": "B7",
+            "realized_pnl": "C7",
+            "dd_today": "D7",
+            "pnl_status": "E7",
+            "loss_cap_trigger": "F7"
+          }
+        },
+
+        "market_risk_indicators": {
+          "title_cell": "H5",
+          "merge_title": "H5:N5",
+          "body_range": "H6:N7",
+          "fields": {
+            "vix": "H7",
+            "kospi_vol": "I7",
+            "kosdaq_vol": "J7",
+            "usdkrs_vol": "K7",
+            "btc_vol": "L7",
+            "market_risk_level": "M7"
+          }
+        },
+
+        "position_risk_checks": {
+          "title_cell": "A9",
+          "merge_title": "A9:F9",
+          "body_range": "A10:F12",
+          "fields": {
+            "total_exposure": "A11",
+            "max_position_count": "B11",
+            "max_position_pct": "C11",
+            "concentration": "D11",
+            "avg_position_risk": "E11",
+            "position_rule_status": "F11"
+          }
+        },
+
+        "portfolio_risk_score": {
+          "title_cell": "H9",
+          "merge_title": "H9:K9",
+          "body_range": "H10:K12",
+          "fields": {
+            "final_risk_score": "H11",
+            "final_risk_rating": "I11"
+          }
+        }
+      }
+    }
+
+  }
+}

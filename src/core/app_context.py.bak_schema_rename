@@ -60,7 +60,7 @@ class AppContext:
         # ------------------------------------------------------------
         # 4. 스키마 로드
         # ------------------------------------------------------------
-        schema_path = self.config_dir / "auto_trading_system.schemas.json"
+        schema_path = self.config_dir / "auto_trading_system_v2.1.schema.json"
         self.schema = SchemaRegistry(schema_path)
 
         # ------------------------------------------------------------
